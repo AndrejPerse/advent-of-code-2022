@@ -1,0 +1,113 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day8.txt";
+
+            int totalRows = 0;
+            int totalColumns = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                totalRows++;
+                totalColumns = line.Length;
+            }
+
+            int[,] grid = new int[totalRows, totalColumns];
+
+            int rowNumber = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                for (int i = 0; i < totalColumns; i++)
+                {
+                    grid[rowNumber, i] = (int)Char.GetNumericValue(line[i]);
+                }
+
+                rowNumber++;
+            }
+
+            int currentTree;
+            int viewingDistanceLeft;
+            int viewingDistanceRight;
+            int viewingDistanceTop;
+            int viewingDistanceBottom;
+            int scenicScore;
+            int highestScenicScore = 0;
+
+            for (int row = 1; row < totalRows - 1; row++)
+            {
+                for (int column = 1; column < totalColumns - 1; column++)
+                {
+                    currentTree = grid[row, column];
+
+                    viewingDistanceLeft = 0;
+                    viewingDistanceRight = 0;
+                    viewingDistanceTop = 0;
+                    viewingDistanceBottom = 0;
+
+                    // check left
+                    for (int x = column - 1; x >= 0; x--)
+                    {
+                        if (grid[row, x] < currentTree)
+                        {
+                            viewingDistanceLeft++;
+                            continue;
+                        }
+
+                        viewingDistanceLeft++;
+                        break;
+                    }
+
+                    // check right
+                    for (int x = column + 1; x < totalColumns; x++)
+                    {
+                        if (grid[row, x] < currentTree)
+                        {
+                            viewingDistanceRight++;
+                            continue;
+                        }
+
+                        viewingDistanceRight++;
+                        break;
+                    }
+
+                    // check top
+                    for (int y = row - 1; y >= 0; y--)
+                    {
+                        if (grid[y, column] < currentTree)
+                        {
+                            viewingDistanceTop++;
+                            continue;
+                        }
+
+                        viewingDistanceTop++;
+                        break;
+                    }
+
+                    // check bottom
+                    for (int y = row + 1; y < totalRows; y++)
+                    {
+                        if (grid[y, column] < currentTree)
+                        {
+                            viewingDistanceBottom++;
+                            continue;
+                        }
+
+                        viewingDistanceBottom++;
+                        break;
+                    }
+
+                    scenicScore = (viewingDistanceLeft * viewingDistanceRight * viewingDistanceTop * viewingDistanceBottom);
+
+                    if (scenicScore > highestScenicScore)
+                    {
+                        highestScenicScore = scenicScore;
+                    }
+                }
+            }
+
+            Console.WriteLine(highestScenicScore);
+            Console.ReadKey();
+        }
+    }

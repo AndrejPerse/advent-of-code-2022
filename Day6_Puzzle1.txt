@@ -1,0 +1,33 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day6.txt";
+            string datastreamBuffer = File.ReadAllText(file);
+
+            Queue<char> letters = new Queue<char>();
+
+            int startReq = 4;
+            int markerCount = 0;
+
+            while (letters.Count() < startReq)
+            {
+                letters.Enqueue(datastreamBuffer[letters.Count()]);
+            }
+
+            for (int i = startReq; i < datastreamBuffer.Length; i++)
+            {
+                if (letters.Distinct().Count() == startReq)
+                {
+                    markerCount = i;
+                    break;
+                }
+
+                letters.Dequeue();
+                letters.Enqueue(datastreamBuffer[i]);
+            }
+
+            Console.WriteLine(markerCount);
+            Console.ReadKey();
+        }
+    }

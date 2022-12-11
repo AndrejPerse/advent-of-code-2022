@@ -1,0 +1,130 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day7.txt";
+
+            DirectoryModel currentDirectory;
+            List<int> targetDirectories = new List<int>(); //list of sizes of at most 100000
+            int totalSize = 0;
+
+            // preperation for the first line in file
+            currentDirectory = new DirectoryModel("program", null);
+            currentDirectory.containedDirectories.Add(new DirectoryModel("/", null));
+
+            DirectoryModel outerMostDirectory = currentDirectory.containedDirectories.Find(x => x.Name == "/");
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string[] commands = line.Split(' ');
+
+                if (commands[0] == "$")
+                {
+                    if (commands[1] == "cd" && commands[2] != "..")
+                    {
+                        currentDirectory = currentDirectory.containedDirectories.Find(x => x.Name == commands[2]);
+                    }
+                    else if (commands[1] == "cd" && commands[2] == "..")
+                    {
+                        currentDirectory = currentDirectory.parentDirectory;
+                    }
+                }
+                else
+                {
+                    if (commands[0] == "dir")
+                    {
+                        currentDirectory.containedDirectories.Add(new DirectoryModel(commands[1], currentDirectory));
+                    }
+                    else
+                    {
+                        currentDirectory.containedFiles.Add(new FileModel(commands[1], int.Parse(commands[0])));
+                    }
+                }
+            }
+
+            //loop though every directory and save info in targetDirectories
+            DirectoryLoop(outerMostDirectory, targetDirectories);
+
+            foreach (int number in targetDirectories)
+            {
+                totalSize += number;
+            }
+
+            Console.WriteLine(totalSize);
+            Console.ReadKey();
+        }
+
+        public static void DirectoryLoop(DirectoryModel directory, List<int> targetDirectories)
+        {
+            if (directory.DirectorySize <= 100000)
+            {
+                targetDirectories.Add(directory.DirectorySize);
+            }
+
+            if (directory.containedDirectories.Count != 0)
+            {
+                foreach (DirectoryModel child in directory.containedDirectories)
+                {
+                    DirectoryLoop(child, targetDirectories);
+                }
+            }
+        }
+
+        public class DirectoryModel
+        {
+            public string Name { get; set; }
+            public DirectoryModel parentDirectory;
+            public List<FileModel> containedFiles;
+            public List<DirectoryModel> containedDirectories;
+            public int DirectorySize
+            {
+                get
+                {
+                    int size = 0;
+
+                    foreach (FileModel file in containedFiles)
+                    {
+                        size += file.size;
+                    }
+
+                    size += this.ChildSize;
+
+                    return size;
+                }
+            }
+            public int ChildSize
+            {
+                get
+                {
+                    int size = 0;
+
+                    foreach (DirectoryModel directory in containedDirectories)
+                    {
+                        size += directory.DirectorySize;
+                    }
+
+                    return size;
+                }
+            }
+
+            public DirectoryModel(string directoryName, DirectoryModel parent)
+            {
+                Name = directoryName;
+                parentDirectory = parent;
+                containedFiles = new List<FileModel>();
+                containedDirectories = new List<DirectoryModel>();
+            }
+        }
+
+        public class FileModel
+        {
+            public string Name { get; set; }
+            public int size;
+
+            public FileModel(string fileName, int fileSize)
+            {
+                Name = fileName;
+                size = fileSize;
+            }
+        }
+    }

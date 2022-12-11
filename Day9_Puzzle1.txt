@@ -1,0 +1,101 @@
+public static class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day9.txt";
+
+            int[] headPosition = { 1, 1 };
+            int[] tailPosition = { 1, 1 };
+            int[] positionDistance = { 0, 0 };
+
+            List<int[]> visitedPositions = new List<int[]>();
+            visitedPositions.Add(new int[] { 1, 1 });
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string[] motions = line.Split(' ');
+
+                switch (motions[0])
+                {
+                    case "R":
+                        for (int step = 0; step < int.Parse(motions[1]); step++)
+                        {
+                            headPosition[0]++;
+
+                            tailPosition.MoveIfFar(headPosition);
+
+                            visitedPositions.AddIfNotExist(tailPosition);
+                        }
+                        break;
+                    case "L":
+                        for (int step = 0; step < int.Parse(motions[1]); step++)
+                        {
+                            headPosition[0]--;
+
+                            tailPosition.MoveIfFar(headPosition);
+
+                            visitedPositions.AddIfNotExist(tailPosition);
+                        }
+                        break;
+                    case "U":
+                        for (int step = 0; step < int.Parse(motions[1]); step++)
+                        {
+                            headPosition[1]++;
+
+                            tailPosition.MoveIfFar(headPosition);
+
+                            visitedPositions.AddIfNotExist(tailPosition);
+                        }
+                        break;
+                    case "D":
+                        for (int step = 0; step < int.Parse(motions[1]); step++)
+                        {
+                            headPosition[1]--;
+
+                            tailPosition.MoveIfFar(headPosition);
+
+                            visitedPositions.AddIfNotExist(tailPosition);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            Console.WriteLine(visitedPositions.Count());
+            Console.ReadKey();
+        }
+
+        public static void MoveIfFar(this int[] tailPosition, int[] headPosition)
+        {
+            int[] positionDistance = new int[2];
+
+            positionDistance[0] = headPosition[0] - tailPosition[0];
+            positionDistance[1] = headPosition[1] - tailPosition[1];
+
+            if (Math.Abs(positionDistance[0]) > 1 || Math.Abs(positionDistance[1]) > 1)
+            {
+                tailPosition[0] += Math.Sign(positionDistance[0]);
+                tailPosition[1] += Math.Sign(positionDistance[1]);
+            }
+        }
+
+        public static void AddIfNotExist(this List<int[]> visitedPositions, int[] tailPosition)
+        {
+            bool exists = false;
+
+            foreach (int[] position in visitedPositions)
+            {
+                if (position[0] == tailPosition[0] && position[1] == tailPosition[1])
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists)
+            {
+                visitedPositions.Add(new int[] { tailPosition[0], tailPosition[1] });
+            }
+        }
+    }

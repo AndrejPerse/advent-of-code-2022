@@ -1,0 +1,29 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day1.txt";
+            int currentStock = 0;
+            int highestStock = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                if (line != "")
+                {
+                    currentStock += int.Parse(line);
+                }
+                else
+                {
+                    if (currentStock > highestStock)
+                    {
+                        highestStock = currentStock;
+                    }
+
+                    currentStock = 0;
+                }
+            }
+
+            Console.WriteLine(highestStock);
+            Console.ReadKey();
+        }
+    }

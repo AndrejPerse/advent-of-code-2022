@@ -1,0 +1,61 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day2.txt";
+
+            int shapeScore = 0;
+            int outcomeScore = 0;
+            int totalScore;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                char opponentPlay = line[0];
+                char playerPlay = line[2];
+
+                switch (playerPlay)
+                {
+                    case 'X':
+                        if (opponentPlay == 'A')
+                        {
+                            outcomeScore += 3;
+                        }
+                        else if (opponentPlay == 'C')
+                        {
+                            outcomeScore += 6;
+                        }
+                        shapeScore += 1;
+                        break;
+                    case 'Y':
+                        if (opponentPlay == 'B')
+                        {
+                            outcomeScore += 3;
+                        }
+                        else if (opponentPlay == 'A')
+                        {
+                            outcomeScore += 6;
+                        }
+                        shapeScore += 2;
+                        break;
+                    case 'Z':
+                        if (opponentPlay == 'C')
+                        {
+                            outcomeScore += 3;
+                        }
+                        else if (opponentPlay == 'B')
+                        {
+                            outcomeScore += 6;
+                        }
+                        shapeScore += 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            totalScore = shapeScore + outcomeScore;
+
+            Console.WriteLine(totalScore);
+            Console.ReadKey();
+        }
+    }

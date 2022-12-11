@@ -1,0 +1,114 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day8.txt";
+
+            int totalRows = 0;
+            int totalColumns = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                totalRows++;
+                totalColumns = line.Length;
+            }
+
+            int[,] grid = new int[totalRows, totalColumns];
+
+            int rowNumber = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                for (int i = 0; i < totalColumns; i++)
+                {
+                    grid[rowNumber, i] = (int)Char.GetNumericValue(line[i]);
+                }
+
+                rowNumber++;
+            }
+
+            int currentTree;
+            int highestTree;
+            int numberOfVisible = 0;
+
+            for (int row = 1; row < totalRows - 1; row++)
+            {
+                for (int column = 1; column < totalColumns - 1; column++)
+                {
+                    currentTree = grid[row, column];
+                    highestTree = 0;
+
+                    // check left
+                    for (int x = 0; x < column; x++)
+                    {
+                        if (grid[row, x] > highestTree)
+                        {
+                            highestTree = grid[row, x];
+                        }
+                    }
+
+                    if (currentTree > highestTree)
+                    {
+                        numberOfVisible++;
+                        continue;
+                    }
+
+                    highestTree = 0;
+
+                    // check right
+                    for (int x = column + 1; x < totalColumns; x++)
+                    {
+                        if (grid[row, x] > highestTree)
+                        {
+                            highestTree = grid[row, x];
+                        }
+                    }
+
+                    if (currentTree > highestTree)
+                    {
+                        numberOfVisible++;
+                        continue;
+                    }
+
+                    highestTree = 0;
+
+                    // check top
+                    for (int y = 0; y < row; y++)
+                    {
+                        if (grid[y, column] > highestTree)
+                        {
+                            highestTree = grid[y, column];
+                        }
+                    }
+
+                    if (currentTree > highestTree)
+                    {
+                        numberOfVisible++;
+                        continue;
+                    }
+
+                    highestTree = 0;
+
+                    // check bottom
+                    for (int y = row + 1; y < totalRows; y++)
+                    {
+                        if (grid[y, column] > highestTree)
+                        {
+                            highestTree = grid[y, column];
+                        }
+                    }
+
+                    if (currentTree > highestTree)
+                    {
+                        numberOfVisible++;
+                        continue;
+                    }
+                }
+            }
+
+            numberOfVisible += ((2 * totalRows) + (2 * (totalColumns - 2)));
+
+            Console.WriteLine(numberOfVisible);
+            Console.ReadKey();
+        }
+    }

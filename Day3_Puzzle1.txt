@@ -1,0 +1,27 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day3.txt";
+            string priorityList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            int prioritySum = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string firstComp = line.Substring(0, line.Length / 2);
+                string secondComp = line.Substring(line.Length / 2);
+
+                foreach (char item in firstComp)
+                {
+                    if (secondComp.Contains(item))
+                    {
+                        prioritySum += (priorityList.IndexOf(item) + 1);
+                        break;
+                    }
+                }
+            }
+
+            Console.WriteLine(prioritySum);
+            Console.ReadKey();
+        }
+    }

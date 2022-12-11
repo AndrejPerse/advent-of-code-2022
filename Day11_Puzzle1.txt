@@ -1,0 +1,150 @@
+public static class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day11.txt";
+            char[] separators = new char[] { ' ', ',', ':' };
+            int step = 1;
+            int rounds = 20;
+            List<int> monkeyInspections = new List<int>();
+            int monkeyBusiness;
+
+            List<MonkeyModel> monkeys = new List<MonkeyModel>();
+            int monkeyNumber = 0;
+            List<int> startingItems = new List<int>();
+            string operation = "";
+            int test = 0;
+            int nextMonkeyTrue = 0;
+            int nextMonkeyFalse;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string[] notes = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                switch (step)
+                {
+                    case 1:
+                        monkeyNumber = int.Parse(notes[1]);
+                        step++;
+                        break;
+                    case 2:
+                        startingItems = new List<int>();
+                        for (int i = 2; i < notes.Length; i++)
+                        {
+                            startingItems.Add(int.Parse(notes[i]));
+                        }
+                        step++;
+                        break;
+                    case 3:
+                        operation = $"{notes[4]}{notes[5]}";
+                        step++;
+                        break;
+                    case 4:
+                        test = int.Parse(notes[3]);
+                        step++;
+                        break;
+                    case 5:
+                        nextMonkeyTrue = int.Parse(notes[5]);
+                        step++;
+                        break;
+                    case 6:
+                        nextMonkeyFalse = int.Parse(notes[5]);
+                        monkeys.Add(new MonkeyModel(monkeyNumber, startingItems, operation, test, nextMonkeyTrue, nextMonkeyFalse));
+                        step++;
+                        break;
+                    case 7:
+                        step = 1;
+                        break;
+                }
+            }
+
+            for (int round = 1; round <= rounds; round++)
+            {
+                foreach (MonkeyModel monkey in monkeys)
+                {
+                    foreach (int item in monkey.startingItems)
+                    {
+                        int newItem = monkey.ItemInspect(item);
+
+                        newItem = newItem / 3;
+
+                        if (newItem % monkey.test == 0)
+                        {
+                            monkeys.Find(x => x.monkeyNumber == monkey.nextMonkeyTrue).startingItems.Add(newItem);
+                        }
+                        else
+                        {
+                            monkeys.Find(x => x.monkeyNumber == monkey.nextMonkeyFalse).startingItems.Add(newItem);
+                        }
+                    }
+
+                    monkey.startingItems.Clear();
+                }
+            }
+
+            foreach (MonkeyModel monkey in monkeys)
+            {
+                monkeyInspections.Add(monkey.numberOfInspects);
+            }
+
+            monkeyInspections.Sort((a, b) => b.CompareTo(a));
+            monkeyBusiness = monkeyInspections[0] * monkeyInspections[1];
+
+            Console.WriteLine(monkeyBusiness);
+            Console.ReadKey();
+        }
+
+        public static int ItemInspect(this MonkeyModel monkey, int item)
+        {
+            int newItem;
+
+            if (monkey.operation[0] == '*')
+            {
+                if (monkey.operation.Substring(1) == "old")
+                {
+                    newItem = item * item;
+                }
+                else
+                {
+                    newItem = item * int.Parse(monkey.operation.Substring(1));
+                }
+            }
+            else
+            {
+                if (monkey.operation.Substring(1) == "old")
+                {
+                    newItem = item + item;
+                }
+                else
+                {
+                    newItem = item + int.Parse(monkey.operation.Substring(1));
+                }
+            }
+
+            monkey.numberOfInspects++;
+
+            return newItem;
+        }
+
+        public class MonkeyModel
+        {
+            public int monkeyNumber;
+            public List<int> startingItems = new List<int>();
+            public string operation;
+            public int test;
+            public int nextMonkeyTrue;
+            public int nextMonkeyFalse;
+            public int numberOfInspects;
+
+            public MonkeyModel(int number, List<int> items, string operation, int test, int nextMonkeyTrue, int nextMonkeyFalse)
+            {
+                monkeyNumber = number;
+                startingItems = items;
+                this.operation = operation;
+                this.test = test;
+                this.nextMonkeyTrue = nextMonkeyTrue;
+                this.nextMonkeyFalse = nextMonkeyFalse;
+                numberOfInspects = 0;
+            }
+        }
+    }

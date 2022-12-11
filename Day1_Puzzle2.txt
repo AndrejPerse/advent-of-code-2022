@@ -1,0 +1,45 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day1.txt";
+            int currentStock = 0;
+            int highestStock = 0;
+            int secondHighestStock = 0;
+            int thirdHighestStock = 0;
+            int totalStock;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                if (line != "")
+                {
+                    currentStock += int.Parse(line);
+                }
+                else
+                {
+                    if (currentStock >= highestStock)
+                    {
+                        thirdHighestStock = secondHighestStock;
+                        secondHighestStock = highestStock;
+                        highestStock = currentStock;
+                    }
+                    else if (currentStock >= secondHighestStock)
+                    {
+                        thirdHighestStock = secondHighestStock;
+                        secondHighestStock = currentStock;
+                    }
+                    else if (currentStock >= thirdHighestStock)
+                    {
+                        thirdHighestStock = currentStock;
+                    }
+
+                    currentStock = 0;
+                }
+            }
+
+            totalStock = highestStock + secondHighestStock + thirdHighestStock;
+
+            Console.WriteLine(totalStock);
+            Console.ReadKey();
+        }
+    }

@@ -1,0 +1,50 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day3.txt";
+            string priorityList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            int prioritySum = 0;
+
+            string firstMember = "";
+            string secondMember = "";
+            string thirdMember = "";
+            int memberCount = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                if (memberCount == 0)
+                {
+                    firstMember = line;
+                }
+                else if (memberCount == 1)
+                {
+                    secondMember = line;
+                }
+                else
+                {
+                    thirdMember = line;
+                }
+
+                memberCount++;
+
+                if (memberCount == 3)
+                {
+                    foreach (char item in firstMember)
+                    {
+                        if (secondMember.Contains(item) && thirdMember.Contains(item))
+                        {
+                            prioritySum += (priorityList.IndexOf(item) + 1);
+                            break;
+                        }
+                    }
+
+                    firstMember = secondMember = thirdMember = "";
+                    memberCount = 0;
+                }
+            }
+
+            Console.WriteLine(prioritySum);
+            Console.ReadKey();
+        }
+    }

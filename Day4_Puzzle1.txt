@@ -1,0 +1,43 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day4.txt";
+            int count = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string[] pair = line.Split(',');
+
+                string[] firstElfLimits = pair[0].Split('-');
+                string[] secondElfLimits = pair[1].Split('-');
+
+                List<int> firstElfSections = new List<int>();
+                List<int> secondElfSections = new List<int>();
+
+                for (int i = int.Parse(firstElfLimits[0]); i <= int.Parse(firstElfLimits[1]); i++)
+                {
+                    firstElfSections.Add(i);
+                }
+
+                for (int i = int.Parse(secondElfLimits[0]); i <= int.Parse(secondElfLimits[1]); i++)
+                {
+                    secondElfSections.Add(i);
+                }
+
+                List<int> sectionsOnlyInFirst = new List<int>();
+                List<int> sectionsOnlyInSecond = new List<int>();
+
+                sectionsOnlyInFirst = firstElfSections.Except(secondElfSections).ToList();
+                sectionsOnlyInSecond = secondElfSections.Except(firstElfSections).ToList();
+
+                if (!sectionsOnlyInFirst.Any() || !sectionsOnlyInSecond.Any())
+                {
+                    count++;
+                }
+            }
+
+            Console.WriteLine(count);
+            Console.ReadKey();
+        }
+    }

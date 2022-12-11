@@ -1,0 +1,62 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day10.txt";
+
+            int register = 1;
+            int cycle = 0;
+            List<char>[] drawings = { new List<char>(), new List<char>(), new List<char>(), new List<char>(), new List<char>(), new List<char>() };
+            int currentRow = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string[] instructions = line.Split(' ');
+
+                if (instructions[0] == "addx")
+                {
+                    CycleCheck();
+                    CycleCheck();
+                    register += int.Parse(instructions[1]);
+                }
+                else
+                {
+                    CycleCheck();
+                }
+            }
+
+            foreach (List<char> row in drawings)
+            {
+                foreach (char pixel in row)
+                {
+                    Console.Write(pixel);
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
+
+            void CycleCheck()
+            {
+                int[] positions = { register - 1, register, register + 1 };
+
+                if (drawings[currentRow].Count == 40)
+                {
+                    currentRow++;
+                    cycle = 0;
+                }
+
+                if (positions.Contains(cycle))
+                {
+                    drawings[currentRow].Add('#');
+                }
+                else
+                {
+                    drawings[currentRow].Add('.');
+                }
+
+                cycle++;
+            }
+        }
+    }

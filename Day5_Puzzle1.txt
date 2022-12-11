@@ -1,0 +1,49 @@
+class Program
+    {
+        public static void Main()
+        {
+            string procedure = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day5.txt";
+
+            List<char> listOne = new List<char> { 'Z', 'J', 'N', 'W', 'P', 'S' };
+            List<char> listTwo = new List<char> { 'G', 'S', 'T' };
+            List<char> listThree = new List<char> { 'V', 'Q', 'R', 'L', 'H' };
+            List<char> listFour = new List<char> { 'V', 'S', 'T', 'D' };
+            List<char> listFive = new List<char> { 'Q', 'Z', 'T', 'D', 'B', 'M', 'J' };
+            List<char> listSix = new List<char> { 'M', 'W', 'T', 'J', 'D', 'C', 'Z', 'L' };
+            List<char> listSeven = new List<char> { 'L', 'P', 'M', 'W', 'G', 'T', 'J' };
+            List<char> listEight = new List<char> { 'N', 'G', 'M', 'T', 'B', 'F', 'Q', 'H' };
+            List<char> listNine = new List<char> { 'R', 'D', 'G', 'C', 'P', 'B', 'Q', 'W' };
+
+            Stack<char>[] stacks = {
+                new Stack<char>(listOne),
+                new Stack<char>(listTwo),
+                new Stack<char>(listThree),
+                new Stack<char>(listFour),
+                new Stack<char>(listFive),
+                new Stack<char>(listSix),
+                new Stack<char>(listSeven),
+                new Stack<char>(listEight),
+                new Stack<char>(listNine),
+            };
+
+            foreach (string step in File.ReadLines(procedure))
+            {
+                string[] rules = step.Split(' ');
+                int numberOfCrates = int.Parse(rules[1]);
+                int startingStack = int.Parse(rules[3]);
+                int endingStack = int.Parse(rules[5]);
+
+                for (int i = 0; i < numberOfCrates; i++)
+                {
+                    stacks[endingStack - 1].Push(stacks[startingStack - 1].Pop());
+                }
+            }
+
+            foreach (Stack<Char> stack in stacks)
+            {
+                Console.Write(stack.Peek());
+            }
+
+            Console.ReadKey();
+        }
+    }

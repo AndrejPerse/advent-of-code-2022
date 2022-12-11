@@ -1,0 +1,46 @@
+class Program
+    {
+        public static void Main()
+        {
+            string file = @"C:\Users\Andrej\source\repos\Advent of Code\Advent of Code\PuzzleInputs\day10.txt";
+
+            int register = 1;
+            int cycle = 0;
+            int[] targetCycles = { 20, 60, 100, 140, 180, 220 };
+            List<int> signalStrengths = new List<int>();
+            int signalSum = 0;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                string[] instructions = line.Split(' ');
+
+                if (instructions[0] == "addx")
+                {
+                    CycleCheck();
+                    CycleCheck();
+                    register += int.Parse(instructions[1]);
+                }
+                else
+                {
+                    CycleCheck();
+                }
+            }
+
+            foreach (int signal in signalStrengths)
+            {
+                signalSum += signal;
+            }
+
+            Console.WriteLine(signalSum);
+            Console.ReadKey();
+
+            void CycleCheck()
+            {
+                cycle++;
+                if (targetCycles.Contains(cycle))
+                {
+                    signalStrengths.Add(register * cycle);
+                }
+            }
+        }
+    }
